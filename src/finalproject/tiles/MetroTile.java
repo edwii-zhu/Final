@@ -10,6 +10,7 @@ public class MetroTile extends Tile {
 	
     //TODO level 0: finish constructor
     public MetroTile() {
+        super();
         this.type = TileType.Metro;
         distanceCost = 1.0;
         timeCost = 1.0;
@@ -18,5 +19,8 @@ public class MetroTile extends Tile {
     
     // TODO level 7: updates the distance and time cost differently between metro tiles
     public void fixMetro(Tile node) {
+        	double distance = Math.abs(this.xCoord - node.xCoord) + Math.abs(this.yCoord - node.yCoord);
+        	this.metroTimeCost = distance * metroCommuteFactor;
+        	this.metroDistanceCost = distance / metroCommuteFactor;
     }
 }

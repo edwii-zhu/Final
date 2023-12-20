@@ -25,19 +25,6 @@ public class Graph {
         }
 	}
 
-    private void visit(Tile t){
-        visited.add(t);
-    }
-    private void unvisit(Tile t){
-        visited.remove(t);
-    }
-    private boolean isVisited(Tile t){
-        return visited.contains(t);
-    }
-    private void resetVisited(){
-        visited.clear();
-    }
-	
     // TODO level 2: add an edge to the graph
     public void addEdge(Tile origin, Tile destination, double weight){
         Edge newEdge = new Edge(origin, destination, weight);

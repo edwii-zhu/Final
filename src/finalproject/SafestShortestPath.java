@@ -15,6 +15,7 @@ public class SafestShortestPath extends ShortestPath {
 	//TODO level 8: finish class for finding the safest shortest path with given health constraint
 	public SafestShortestPath(Tile start, int health) {
 		super(start);
+		generateGraph();
 		this.health = health;
 	}
 
