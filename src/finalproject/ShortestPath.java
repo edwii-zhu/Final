@@ -8,6 +8,7 @@ public class ShortestPath extends PathFindingService {
     public ShortestPath(Tile start) {
         super(start);
         generateGraph();
+        findPath(start);
     }
 
     /*
