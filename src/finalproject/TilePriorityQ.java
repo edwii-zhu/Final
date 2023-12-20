@@ -37,6 +37,15 @@ public class TilePriorityQ {
 			i = j;
 		}
 	}
+	private void upheap(int startInd,int endInd){
+		int i = startInd;
+		while(i > 1 && heap[i].costEstimate < heap[i/2].costEstimate){
+			Tile temp = heap[i];
+			heap[i] = heap[i/2];
+			heap[i/2] = temp;
+			i = i/2;
+		}
+	}
 	public TilePriorityQ (ArrayList<Tile> vertices) {
         for (Tile vertex : vertices) {
             add(vertex);
@@ -66,11 +75,12 @@ public class TilePriorityQ {
 	// TODO level 3: implement updateKeys as described in the pdf
 	//updateKeys(Tile t, Tile newPred, double newEstimate): a method that takes as input a Tile t.If such tile belongs to the queue,the method updates which Tile is predicted to be the predecessor of t in the minimum weight path that leads from a source tile to t as well as the estimated cost for this path. Note that this information should be stored in the appropriate fields from the Tile class, and after these updates, the queue should remained a valid min heap.
 	public void updateKeys(Tile t, Tile newPred, double newEstimate) {
-for (int i = 1; i <= size; i++) {
+		for (int i = 1; i <= size; i++) {
 			if (heap[i] == t) {
 				heap[i].predecessor = newPred;
 				heap[i].costEstimate = newEstimate;
-				downHeap(i,size);
+				upheap(i,size);
+				break;
 			}
 		}
 	}

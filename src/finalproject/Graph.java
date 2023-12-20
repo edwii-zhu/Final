@@ -21,7 +21,7 @@ public class Graph {
         this.graphSize = vertices.size();
         adjacentTiles = new ArrayList[graphSize];
         for(int i = 0; i < graphSize; i++){
-            adjacentTiles[i] = new ArrayList<>();
+            adjacentTiles[i] = new ArrayList<Edge>();
         }
 	}
 
@@ -57,7 +57,8 @@ public class Graph {
 	public ArrayList<Tile> getNeighbors(Tile t) {
         ArrayList<Tile> neighbors = new ArrayList<>();
         for (Edge e : adjacentTiles[t.nodeID]) {
-            neighbors.add(e.destination);
+            if(e.destination.isWalkable())
+                neighbors.add(e.destination);
         }
         return neighbors;
     }
