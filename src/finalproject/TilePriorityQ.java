@@ -21,6 +21,19 @@ public class TilePriorityQ {
 			i = i/2;
 		}
 	}
+	private void upHeap(int startInd,int endInd){
+		int i = endInd;
+		while(i > startInd){
+			int j = i/2;
+			if(heap[i].costEstimate >= heap[j].costEstimate){
+				break;
+			}
+			Tile temp = heap[i];
+			heap[i] = heap[j];
+			heap[j] = temp;
+			i = j;
+		}
+	}
 	private void downHeap(int startInd,int endInd ){
 		int i = startInd;
 		while(2*i <= endInd){
@@ -65,13 +78,16 @@ public class TilePriorityQ {
 	
 	// TODO level 3: implement updateKeys as described in the pdf
 	public void updateKeys(Tile t, Tile newPred, double newEstimate) {
-		for (int i = 1; i <= size; i++) {
+		int i = 1;
+		while (i <= size) {
 			if (heap[i] == t) {
 				heap[i].predecessor = newPred;
 				heap[i].costEstimate = newEstimate;
+				upHeap(1,i);
+				downHeap(i,size);
 				break;
 			}
+			i++;
 		}
-		downHeap(1,size);
 	}
 }
