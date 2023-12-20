@@ -11,6 +11,7 @@ public class Graph {
     ArrayList<Tile> vertices;
     int graphSize;
     ArrayList<Edge>[] adjacentTiles;
+    Edge [] [] adjMatrix;
 
     // TODO level 2: Add fields that can help you implement this data type
     // TODO level 2: initialize and assign all variables inside the constructor
@@ -19,6 +20,7 @@ public class Graph {
         this.vertices = vertices;
         this.graphSize = vertices.size();
         adjacentTiles = new ArrayList[graphSize];
+        adjMatrix = new Edge[graphSize][graphSize];
         for (int i = 0; i < graphSize; i++) {
             adjacentTiles[i] = new ArrayList<Edge>();
         }
@@ -28,13 +30,20 @@ public class Graph {
     public void addEdge(Tile origin, Tile destination, double weight) {
         Edge newEdge = new Edge(origin, destination, weight);
         adjacentTiles[origin.nodeID].add(newEdge);
+        adjMatrix[origin.nodeID][destination.nodeID] = newEdge;
     }
 
     // TODO level 2: return a list of all edges in the graph
     public ArrayList<Edge> getAllEdges() {
-        ArrayList<Edge> allEdges = new ArrayList<>();
-        for (int i = 0; i < graphSize; i++) {
-            allEdges.addAll(adjacentTiles[i]);
+       ArrayList<Edge> allEdges = new ArrayList<>();
+        // for (int i = 0; i < graphSize; i++) {
+           // allEdges.addAll(adjacentTiles[i]);
+        for (int i =0; i < graphSize; i++){
+            for (int j = 0; j < graphSize; j++){
+                if (adjMatrix[i][j] != null){
+                    allEdges.add(adjMatrix[i][j]);
+                }
+            }
         }
         return allEdges;
     }
@@ -63,16 +72,19 @@ public class Graph {
         }
 
         return totalCost;
-}
-public Tile getDestination(){
-        for(Tile t : vertices) {
-            if (t.isDestination) {
-                return t;
+    }
+    public Tile getDestination(){
+            for(Tile t : vertices) {
+                if (t.isDestination) {
+                    return t;
+                }
             }
-        }
-    return null;
-}
+        return null;
+    }
 
+    public double getEdgeWeight(Tile start, Tile end){
+        return adjMatrix[start.nodeID][end.nodeID].weight;
+    }
 	
    
     public static class Edge{

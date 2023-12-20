@@ -1,6 +1,7 @@
 package finalproject;
 
 import finalproject.system.Tile;
+import finalproject.Graph.*;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -17,12 +18,13 @@ public abstract class PathFindingService {
 
 	public abstract void generateGraph();
 
+    public void relax(Tile u, Tile v, TilePriorityQ Q){
+        double weight = g.getEdgeWeight(u, v);
 
-    public void relax(Tile u, Tile v){
-        double weight = v.distanceCost;
         if(v.costEstimate > u.costEstimate + weight){
             v.costEstimate = u.costEstimate + weight;
             v.predecessor = u;
+            Q.updateKeys(v,u,v.costEstimate);
         }
     }
     public void initializeSingleSource(Tile start){
@@ -40,8 +42,8 @@ public abstract class PathFindingService {
         while(Q.size > 0){
             Tile u = Q.removeMin();
             s.add(u);
-            for(Tile v : u.neighbors){
-                relax(u, v);
+            for(Tile v : g.getNeighbors(u)){
+                relax(u, v, Q);
             }
         }
         return s;

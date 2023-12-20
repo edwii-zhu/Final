@@ -22,7 +22,7 @@ Note: You can use BFS or DFS to help you get a list of all reachable tiles. Reme
     public void generateGraph() {
         {
             int id = 0;
-            ArrayList<Tile> vertices = GraphTraversal.BFS(source);
+            ArrayList<Tile> vertices = GraphTraversal.DFS(source);
             for (Tile t : vertices) {
                 t.nodeID = id;
                 id++;
@@ -37,7 +37,7 @@ Note: You can use BFS or DFS to help you get a list of all reachable tiles. Reme
                         metroT.fixMetro(metroN);
                         g.addEdge(t, neighbor, metroT.metroDistanceCost);
                     }
-                    else {
+                    else if(t.isWalkable() && neighbor.isWalkable()){
                         g.addEdge(t, neighbor, neighbor.distanceCost);
                     }
                 }
