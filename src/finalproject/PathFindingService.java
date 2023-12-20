@@ -18,7 +18,8 @@ public abstract class PathFindingService {
 	public abstract void generateGraph();
 
 
-    public void relax(Tile u, Tile v, double weight){
+    public void relax(Tile u, Tile v){
+        double weight = v.distanceCost;
         if(v.costEstimate > u.costEstimate + weight){
             v.costEstimate = u.costEstimate + weight;
             v.predecessor = u;
@@ -36,11 +37,11 @@ public abstract class PathFindingService {
         //make dijkstra's algorithm without modifying the graph
         initializeSingleSource(start);
         TilePriorityQ Q = new TilePriorityQ(vertices);
-        while(!Q.isEmpty()){
+        while(Q.size > 0){
             Tile u = Q.removeMin();
             s.add(u);
-            for(Tile v : g.getNeighbors(u)){
-                relax(u, v, v.costEstimate);
+            for(Tile v : u.neighbors){
+                relax(u, v);
             }
         }
         return s;
@@ -48,7 +49,15 @@ public abstract class PathFindingService {
     //TODO level 4: Implement basic dijkstra's algorithm to find a path to the final unknown destination
     public ArrayList<Tile> findPath(Tile startNode) {
         dijkstra(g.vertices, startNode);
-        return g.vertices;
+        Tile curr = g.getDestination();
+        ArrayList<Tile> path = new ArrayList<>();
+
+        while(curr != startNode){
+            path.addFirst(curr);
+            curr = curr.predecessor;
+        }
+        path.addFirst(startNode);
+        return path;
     }
 
     //TODO level 5: Implement basic dijkstra's algorithm to path find to a known destination
@@ -78,4 +87,5 @@ public abstract class PathFindingService {
         return path;
     }
 }
+
 

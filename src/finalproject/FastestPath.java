@@ -9,6 +9,8 @@ public class FastestPath extends PathFindingService {
     //TODO level 6: find time prioritized path
     public FastestPath(Tile start) {
         super(start);
+        generateGraph();
+
     }
 
 	@Override
