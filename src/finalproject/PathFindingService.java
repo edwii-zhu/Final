@@ -1,63 +1,52 @@
 package finalproject;
 
 import finalproject.system.Tile;
-import finalproject.Graph.*;
-
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 
 public abstract class PathFindingService {
-	Tile source;
-	Graph g;
-    ArrayList<Tile> s = new ArrayList<>();
+    Tile source;
+    Graph g;
 
-	public PathFindingService(Tile start) {
-    	this.source = start;
+    public PathFindingService(Tile start) {
+        this.source = start;
         generateGraph();
     }
 
-	public abstract void generateGraph();
+    public abstract void generateGraph();
 
-    public void relax(Tile u, Tile v, TilePriorityQ Q){
-        double weight = g.getEdgeWeight(u, v);
-
-        if(v.costEstimate > u.costEstimate + weight){
-            v.costEstimate = u.costEstimate + weight;
-            v.predecessor = u;
-            Q.updateKeys(v,u,v.costEstimate);
-        }
-    }
-    public void initializeSingleSource(Tile start){
-        for(Tile t : g.vertices){
+    private void initSingleSource(Tile s) {
+        for (Tile t : g.vertices) {
             t.costEstimate = Double.POSITIVE_INFINITY;
             t.predecessor = null;
         }
-        start.costEstimate = 0;
+        s.costEstimate = 0;
     }
 
-    public ArrayList<Tile> dijkstra(Tile start, TilePriorityQ Q){
-        //make dijkstra's algorithm without modifying the graph
-        initializeSingleSource(start);
+    private void relax(Tile u, Tile v, TilePriorityQ q) {
+        double w = g.getEdgeWeight(u, v);
 
-        while(Q.size > 0){
-            Tile u = Q.removeMin();
-            s.add(u);
-            for(Tile v : g.getNeighbors(u)){
-                relax(u, v, Q);
-            }
+        if (v.costEstimate > u.costEstimate + w) {
+            v.costEstimate = u.costEstimate + w;
+            v.predecessor = u;
+            q.updateKeys(v, u, v.costEstimate);
+
         }
-        return s;
     }
+
     //TODO level 4: Implement basic dijkstra's algorithm to find a path to the final unknown destination
     public ArrayList<Tile> findPath(Tile startNode) {
-        TilePriorityQ Q = new TilePriorityQ(g.vertices);
-        dijkstra(startNode, Q);
-        Tile curr = g.getDestination();
-
-        ArrayList<Tile> path = new ArrayList<>();
-
-        while(curr != startNode){
+        dijkstra(startNode);
+        ArrayList<Tile> path = new ArrayList<Tile>();
+        Tile curr = null;
+        for (Tile t : g.vertices) {
+            if (t.isDestination) {
+                curr = t;
+                break;
+            }
+        }
+        while (curr != startNode) {
             path.addFirst(curr);
             curr = curr.predecessor;
         }
@@ -65,35 +54,49 @@ public abstract class PathFindingService {
         return path;
     }
 
+    private void dijkstra(Tile startNode) {
+        initSingleSource(startNode);
+        TilePriorityQ q = new TilePriorityQ(g.vertices);
+        while (q.size > 0) {
+            Tile u = q.removeMin();
+            for (Tile v : g.getNeighbors(u)) {
+                relax(u, v, q);
+            }
+        }
+        ArrayList<Tile> path = new ArrayList<Tile>();
+    }
+
     //TODO level 5: Implement basic dijkstra's algorithm to path find to a known destination
     public ArrayList<Tile> findPath(Tile start, Tile end) {
-        ArrayList<Tile> path = new ArrayList<>();
-        dijkstra(start, new TilePriorityQ(g.vertices));
-        Tile current = end;
-        while(current != start){
-            path.addFirst(current);
-            current = current.predecessor;
+        dijkstra(start);
+        Tile curr = end;
+        ArrayList<Tile> path = new ArrayList<Tile>();
+        while (curr != start) {
+            path.addFirst(curr);
+            curr = curr.predecessor;
         }
+        path.addFirst(start);
         return path;
     }
 
     //TODO level 5: Implement basic dijkstra's algorithm to path find to the final destination passing through given waypoints
-    public ArrayList<Tile> findPath(Tile start, LinkedList<Tile> waypoints){
-        // Step 2: Implement the last and final findPath method, which takes a starting node and a list of waypoints as input. This method builds the shortest paths from the source to the destination, making sure to visit the each of the waypoints in the order in which they have been provided as input. Use the other methods that you have already implemented to help you find such path. Please note that: the destination tile will not be provided within the list of waypoints. You can figure out which one is the destination tile by accessing the field isDestination from the Tile class
-        if (waypoints.isEmpty()){
+    public ArrayList<Tile> findPath(Tile start, LinkedList<Tile> waypoints) {
+        if (waypoints.isEmpty()) {
             return findPath(start);
         }
-        ArrayList<Tile> path = new ArrayList<>();
-        Tile current = start;
-        for(Tile t : waypoints){
-            ArrayList<Tile> subPath = findPath(current, t);
-            path.addAll(subPath);
-            current = t;
+        ArrayList<Tile> path = new ArrayList<Tile>();
+        Tile oldEnd = null;
+        for (Tile t : waypoints) {
+            ArrayList<Tile> temp = findPath(start, t);
+            if (oldEnd != null) {
+                temp.removeFirst();
+            }
+            path.addAll(temp);
+            start = t;
+            oldEnd = temp.get(temp.size() - 1);
         }
-        ArrayList<Tile> subPath = findPath(current);
-        path.addAll(subPath);
+        path.removeLast();
+        path.addAll(findPath(start));
         return path;
     }
 }
-
-

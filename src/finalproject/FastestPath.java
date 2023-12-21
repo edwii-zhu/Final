@@ -34,7 +34,7 @@ public class FastestPath extends PathFindingService {
                         metroT.fixMetro(metroN);
                         g.addEdge(t, neighbor, metroT.metroTimeCost);
                     }
-                    else {
+                    else if(t.isWalkable() && neighbor.isWalkable()){
                         g.addEdge(t, neighbor, neighbor.timeCost);
                     }
                 }

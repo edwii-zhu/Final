@@ -34,7 +34,7 @@ Note: You can use BFS or DFS to help you get a list of all reachable tiles. Reme
                     if (t.type == TileType.Metro && neighbor.type == TileType.Metro){
                         MetroTile metroT = (MetroTile) t;
                         MetroTile metroN = (MetroTile) neighbor;
-                        metroT.fixMetro(metroN);
+                        metroN.fixMetro(metroN);
                         g.addEdge(t, neighbor, metroT.metroDistanceCost);
                     }
                     else if(t.isWalkable() && neighbor.isWalkable()){

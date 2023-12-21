@@ -11,7 +11,7 @@ public class Graph {
     ArrayList<Tile> vertices;
     int graphSize;
     ArrayList<Edge>[] adjacentTiles;
-    Edge [] [] adjMatrix;
+    Edge [][] adjMatrix;
 
     // TODO level 2: Add fields that can help you implement this data type
     // TODO level 2: initialize and assign all variables inside the constructor
@@ -36,8 +36,6 @@ public class Graph {
     // TODO level 2: return a list of all edges in the graph
     public ArrayList<Edge> getAllEdges() {
        ArrayList<Edge> allEdges = new ArrayList<>();
-        // for (int i = 0; i < graphSize; i++) {
-           // allEdges.addAll(adjacentTiles[i]);
         for (int i =0; i < graphSize; i++){
             for (int j = 0; j < graphSize; j++){
                 if (adjMatrix[i][j] != null){
@@ -52,8 +50,9 @@ public class Graph {
     public ArrayList<Tile> getNeighbors(Tile t) {
         ArrayList<Tile> neighbors = new ArrayList<>();
         for (Edge e : adjacentTiles[t.nodeID]) {
-            if (e.destination.isWalkable())
+            if (e.destination.isWalkable()) {
                 neighbors.add(e.destination);
+            }
         }
         return neighbors;
     }
@@ -70,7 +69,6 @@ public class Graph {
                 }
             }
         }
-
         return totalCost;
     }
     public Tile getDestination(){
